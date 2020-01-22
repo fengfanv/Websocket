@@ -18,21 +18,21 @@ npm install nodejs-websocket    //安装nodejs-websocket
 ```javascript
 //创建一个websocket服务
 var server = ws.createServer(function(connection){
-  //发送字符串信息
+  //给连接的客户端发送字符串讯息
   connection.sendText("字符串");
-  //发送二进制数据
+  //给连接的客户端发送二进制数据
   connection.sendBinary(Binary);
-  //发送信息
+  //给连接的客户端发送字符串信息或二进制数据
   connection.send();
-  //监听收听收到的信息
+  //收到客户端消息时触发
   connection.on("text",function(str){
     console.log("收到消息："+str);
   });
-  //监听连接关闭
+  //客户端关闭连接时触发
   connection.on("close",function(code,reason){
     console.log("连接关闭");
   });
-  //监听连接错误
+  //当连接出现错误时触发
   connection.on("error",function(error){
     console.log(error);
   });
@@ -46,19 +46,31 @@ server.connections;
 ```
 #### 3、了解客户端**websocket**
 ```javascript
-var ws=new WebSocket(地址);
-//连接服务
+//new WebSocket时客户端向服务端请求连接
+var ws=new WebSocket(url);
+//连接建立时触发
 ws.onopen=function(){
   console.log("连接成功！");
 }
-//断开连接
+//连接关闭时触发
 ws.onclose=function(){
   console.log("断开连接！");
 }
-//监听服务端发送的信息
+//客户端接收服务端数据时触发
 ws.onmessage=function(e){
   console.log("新消息："+e);
 }
 //发送消息
 ws.send("要发送的消息");
+//关闭连接
+ws.close();
+//连接状态
+ws.readyState;
+/*
+readyState
+0 - 表示连接尚未建立。
+1 - 表示连接已建立，可以进行通信。
+2 - 表示连接正在进行关闭。
+3 - 表示连接已经关闭或者连接不能打开。
+*/
 ```
