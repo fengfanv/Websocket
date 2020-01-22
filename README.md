@@ -6,7 +6,7 @@
 
 ------
 
-### 第一步 了解服务端nodejs-websocket和浏览器端websocket
+### 第一步 了解实现客服系统要用到的工具
 #### 1、服务端**nodejs-websocket**
 
 ```javascript
