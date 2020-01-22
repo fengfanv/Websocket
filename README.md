@@ -13,7 +13,7 @@ mkdir Websocket                 //创建项目文件夹
 cd Websocket                    
 npm install nodejs-websocket    //安装nodejs-websocket
 ```
-#### 2、认识**nodejs-websocket**的Api
+#### 2、怎么使用**nodejs-websocket**的Api
 
 ```javascript
 //创建一个websocket服务
