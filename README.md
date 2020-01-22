@@ -7,13 +7,13 @@
 ------
 
 ### 第一步 使用nodejs-websocket
-#### 1、安装npm插件**nodejs-websocket**
+#### 1、服务端安装npm插件**nodejs-websocket**
 ```
 mkdir Websocket                 //创建项目文件夹
 cd Websocket                    
 npm install nodejs-websocket    //安装nodejs-websocket
 ```
-#### 2、了解**nodejs-websocket**
+#### 2、了解服务端**nodejs-websocket**
 
 ```javascript
 //创建一个websocket服务
@@ -43,4 +43,22 @@ server.listen(host,[host]);
 server.close();
 //包含所有连接的客户端的数组,可利用它对广播信息
 server.connections;
+```
+#### 3、了解客户端**websocket**
+```javascript
+var ws=new WebSocket(地址);
+//连接服务
+ws.onopen=function(){
+  console.log("连接成功！");
+}
+//断开连接
+ws.onclose=function(){
+  console.log("断开连接！");
+}
+//监听服务端发送的信息
+ws.onmessage=function(e){
+  console.log("新消息："+e);
+}
+//发送消息
+ws.send("要发送的消息");
 ```
