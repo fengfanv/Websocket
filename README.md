@@ -6,14 +6,8 @@
 
 ------
 
-### 第一步 使用nodejs-websocket
-#### 1、服务端安装npm插件**nodejs-websocket**
-```
-mkdir Websocket                 //创建项目文件夹
-cd Websocket                    
-npm install nodejs-websocket    //安装nodejs-websocket
-```
-#### 2、了解服务端**nodejs-websocket**
+### 第一步 了解服务端nodejs-websocket和浏览器端websocket
+#### 1、服务端**nodejs-websocket**
 
 ```javascript
 //创建一个websocket服务
@@ -55,7 +49,7 @@ server.close();
 server.connections;
 
 ```
-#### 3、了解客户端**websocket**
+#### 2、客户端**websocket**
 ```javascript
 //new WebSocket时客户端向服务端请求连接
 var ws=new WebSocket(url);
@@ -94,3 +88,10 @@ readyState
 ```
 
 ### 第二步 结合上面的知识写一个小Demo，跑一下，看看跑的情况
+
+#### 1、服务端安装npm插件**nodejs-websocket**
+```
+mkdir Websocket                 //创建项目文件夹
+cd Websocket                    
+npm install nodejs-websocket    //安装nodejs-websocket
+```
