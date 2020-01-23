@@ -115,9 +115,21 @@ server.listen(3000, function () {
 ```
 <h6>服务端代码讲解：</h6>
 <p>1、服务端启动成功时，服务端控制台打印`“websocket 启动成功！”`。</p>
+
+![](/images/websocket-1.png)
+
 <p>2、客户端连接到本服务时，服务端控制台会打印`“新建连接已连接”`。</p>
+
+![](/images/websocket-2.png)
+
 <p>3、当连接本服务的客户端断开与本服务的连接时，服务端控制台打印`“连接关闭”`。</p>
+
+![](/images/websocket-3.png)
+
 <p>4、当已连接本服务的客户端发送消息到本服务时，服务端控制台打印`“收到+收到的消息”`，同时会把发送过来的消息拼接成`“服务器+发送过的信息+服务器”`的形式返回到`“发送信息的客户端”`。</p>
+
+![](/images/websocket-4.png)
+![](/images/websocket-4-1.png)
 
 客户端 - html
 ```
@@ -150,7 +162,7 @@ server.listen(3000, function () {
 				}
         //当服务端发来消息时运行
 				ws.onmessage = function(data) {
-					showMessage(data);
+					showMessage(data.data);
 				}
 			};
 			//关闭服务
@@ -177,5 +189,38 @@ server.listen(3000, function () {
 <p>2、turnOffServer()方法用来切断与服务端的连接</p>
 <p>3、send()用来把想发送的消息发送到服务端</p>
 <p>4、showMessage()用来显示服务端发来的信息</p>
+<h6>运行效果图</h6>
 
-#### 3、
+![](/images/websocket-5.png)
+#### 3、这个demo遇到的问题
+问题：当就一个用户连接时服务时，这个用户发送信息服务器可以返回给发送这个用户。但是当多个用户都连接这个服务时，其中一个用户A发消息理论上应该连接的所有人都能看见，但是现实只有用户A自己收到了从服务器处理后的消息。
+![](/images/websocket-6.png)
+
+为什么：翻看文档发现，每当一个用户连接nodejs-websocket创建的服务时，服务都会为这个用户创建一个环境，每个用户的环境不同，所以这就是为啥当一个用户发送消息时只有发送人收到了服务器返回的消息，当然nodejs-websocket解决了这个问题为使用者添加了connections属性，这个属性已数组的形式连接着每一个用户的环境，这样通过遍历数组就可以给所有用户发送想发送的消息了。
+
+解决问题：
+
+1、在服务端写一个方法，遍历用户给每一个发送消息
+```javascript
+function send(str) {
+	//遍历每个用户，并把要要发送的信息发送给被遍历的每个用户
+	server.connections.forEach(function (connection) {
+		connection.sendText(str);
+	})
+}
+```
+
+2、将服务端监听text方法内容替换成以下内容
+```javascript
+connection.on("text", function (str) {
+	console.log("收到:" + str);
+	//connection.sendText("服务器" + str + "服务器");   旧
+	send("服务器" + str + "服务器")					 //新
+})
+```
+
+3、解决后运行效果
+
+![](/images/websocket-7.png)
+
+### 第三步 设计客服系统模型
