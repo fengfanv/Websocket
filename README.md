@@ -95,3 +95,87 @@ mkdir Websocket                 //创建项目文件夹
 cd Websocket                    
 npm install nodejs-websocket    //安装nodejs-websocket
 ```
+#### 2、编写demo
+服务端 - Node.js
+```javascript
+var ws = require("nodejs-websocket");
+var server = ws.createServer(function (connection) {
+	console.log("新连接已连接");
+	connection.on("text", function (str) {
+		console.log("收到:" + str);
+		connection.sendText("服务器" + str + "服务器");
+	})
+	connection.on("close", function (code, reason) {
+		console.log("连接关闭");
+	})
+});
+server.listen(3000, function () {
+	console.log('websocket 启动成功！', 3000);
+});
+```
+<h6>服务端代码讲解：</h6>
+<p>1、服务端启动成功时，服务端控制台打印`“websocket 启动成功！”`。</p>
+<p>2、客户端连接到本服务时，服务端控制台会打印`“新建连接已连接”`。</p>
+<p>3、当连接本服务的客户端断开与本服务的连接时，服务端控制台打印`“连接关闭”`。</p>
+<p>4、当已连接本服务的客户端发送消息到本服务时，服务端控制台打印`“收到+收到的消息”`，同时会把发送过来的消息拼接成`“服务器+发送过的信息+服务器”`的形式返回到`“发送信息的客户端”`。</p>
+
+客户端 - html
+```
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Demo</title>
+	</head>
+	<body>
+		<div>
+			<button onclick="turnOnServer()">打开服务</button>
+			<button onclick="turnOffServer()">关闭服务</button>
+		</div>
+		<input id="sendText" type="text" placeholder="消息" />
+		<button onclick="send()">发送</button>
+		<div id="board"></div><!--显示当前服务连接状态-->
+		<script type="text/javascript">
+			var ws = null;
+			//打开服务
+			function turnOnServer() {
+				ws = new WebSocket("ws://localhost:3000");
+        //当服务连接时运行
+				ws.onopen = function() {
+					document.getElementById("board").innerHTML = "已连接";
+				}
+        //当服务断开或关闭时运行
+				ws.onclose = function() {
+					document.getElementById("board").innerHTML = "已断开";
+				}
+        //当服务端发来消息时运行
+				ws.onmessage = function(data) {
+					showMessage(data);
+				}
+			};
+			//关闭服务
+			function turnOffServer() {
+				ws.close();
+			};
+			//发送消息
+			function send() {
+				var txt = document.getElementById("sendText").value;
+				ws.send(txt);
+			};
+			//显示服务器发过来的讯息
+			function showMessage(str) {
+				var element = document.createElement("div");
+				element.innerHTML = str;
+				document.body.appendChild(element);
+			};
+		</script>
+	</body>
+</html>
+```
+<h6>客户端代码讲解：</h6>
+<p>1、turnOnServer()方法用来启动与服务端的服务连接。</p>
+<p>2、turnOffServer()方法用来切断与服务端的连接</p>
+<p>3、send()用来把想发送的消息发送到服务端</p>
+<p>4、showMessage()用来显示服务端发来的信息</p>
+
+#### 3、
