@@ -1,0 +1,171 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #fafafa;
+}
+
+.fl{
+    float: left;
+}
+
+.fr{
+    float: right;
+}
+
+.clearfix:after, .clearfix:before {
+    content: "";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+.content {
+    margin: 0 auto;
+    background: white;
+    height: 100vh;
+}
+
+.content_width {
+    width: 840px;
+}
+
+.content_header {
+    width: 100%;
+    height: 80px;
+    text-align: left;
+    line-height: 80px;
+    color: white;
+    font-size: 30px;
+    text-indent: 30px;
+}
+
+.content_content {
+    width: 100%;
+    height: 65vh;
+    overflow-y: scroll;
+}
+
+.content_text {
+    width: 100%;
+    height: 20vh;
+    border-top: 1px solid #ccc;
+}
+
+.content_text>textarea {
+    width: 100%;
+    height: 100%;
+    border: 0px;
+    font-size: 30px;
+    outline: none;
+}
+
+.content_button {
+    width: 100%;
+    height: calc(15vh - 81px);
+}
+
+.content_button>button {
+    width: 160px;
+    height: 100%;
+    border: 0px;
+    color: white;
+    float: right;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 20px;
+    margin-right: 20px;
+}
+
+.close_color {
+    background: rgb(252,147,29);;
+}
+
+.kefu_color {
+    background: rgb(34,179,246);
+}
+
+.yonghu_color {
+    background: rgb(162,235,60);
+}
+
+.yonghu_xiaoxi,.kefu_xiaoxi,.xitong_xiaoxi{
+    padding: 16px 10px;
+}
+.yonghu_xiaoxi > span{
+    display: block;
+    width: 100%;
+    color: rgb(162,235,60);
+    font-size: 24px;
+}
+.yonghu_xiaoxi > p{
+    width: 100%;
+    border-radius: 20px;
+    font-size: 28px;
+}
+
+.kefu_xiaoxi > span{
+    display: block;
+    width: 100%;
+    color: rgb(34,179,246);
+    font-size: 24px;
+}
+.kefu_xiaoxi > p{
+    width: 100%;
+    border-radius: 20px;
+    font-size: 28px;
+    
+}
+
+.xitong_xiaoxi > span{
+    display: block;
+    width: 100%;
+    color: rgb(252,147,29);
+    font-size: 24px;
+}
+.xitong_xiaoxi > p{
+    width: 100%;
+    border-radius: 20px;
+    font-size: 28px;
+    
+}
+.text_align_right{
+    text-align: right;
+}
+
+.shouye_children{
+    width: 500px;
+    padding: 16px 10px;
+    line-height: 30px;
+    height: 30px;
+    font-size: 30px;
+    margin:0 auto;
+}
+.shouye_children > label{
+    width: 200px;
+}
+.shouye_children > input{
+    width: 290px;
+    border:0px;
+    border-bottom: 1px solid #ccc;
+    font-size: 30px;
+    outline: none;
+}
+.shouye_children > button{
+    width: 200px;
+    height: 80px;
+    color: white;
+    border: 0px;
+    display: block;
+    margin: 0 auto;
+    cursor: pointer;
+    font-size: 30px;
+}

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./css/public.css">
+    <title>用户</title>
+</head>
+
+<body>
+    <!--首页-->
+    <div class="content content_width" style="display:block;" id="shouye">
+        <div class="shouye_children">
+            <label for=""> 用户名：</label>
+            <input type="text" id="inputUserName" value="用户123">
+        </div>
+        <div class="shouye_children">
+            身份：用户
+        </div>
+        <div class="shouye_children">
+            <button class="yonghu_color" onclick="getroom()">连接</button>
+        </div>
+    </div>
+    <!--聊天室-->
+    <div class="content content_width" id="liaotianshi" style="display:none;">
+        <div class="content_header yonghu_color">用户聊天界面</div>
+        <div class="content_content" id="neirong">
+            <!--用户消息-->
+            <div class="clearfix yonghu_xiaoxi">
+                <span class="text_align_right">客户123</span>
+                <p class="text_align_right">哈哈哈哈哈哈</p>
+            </div>
+            <!--系统消息-->
+            <div class="clearfix xitong_xiaoxi">
+                <span>系统</span>
+                <p>哈哈哈哈哈哈</p>
+            </div>
+            <!--客服消息-->
+            <div class="clearfix kefu_xiaoxi">
+                <span>客服abc</span>
+                <p>你好</p>
+            </div>
+        </div>
+        <div class="content_text">
+            <textarea name="" id="sendText" cols="30" rows="10"></textarea>
+        </div>
+        <div class="content_button">
+            <button class="yonghu_color" onclick="send()">发送</button>
+            <button class="close_color" onclick="turnOffServer()">关闭房间</button>
+        </div>
+    </div>
+    <script src="./js/jquery.js"></script>
+    <script>
+        var userType = "yonghu";
+        var userName = "";
+        var ws = null;
+        var elementShouye = document.getElementById("shouye");
+        var elementLiaotianshi = document.getElementById("liaotianshi");
+        var elementNeirong = document.getElementById("neirong");
+
+        //用户获取是否用空闲房间
+        function getroom(){
+            userName = document.getElementById("inputUserName").value;
+            $.ajax({
+                type:'get',
+                url:"http://localhost:3001/getroom",
+                data:{
+                    "userName":userName
+                },
+                dataType:"json",
+                success:function(data){
+                    if(data.room){
+                        //有空闲房间
+                        //启动websocket服务
+                        turnOnServer();
+                    }
+                },
+                error:function(xhr){
+                    console.log("error:"+xhr.status);
+                }
+            })
+        }
+
+
+        //系统消息颜色  #607d8b
+        //打开服务
+        function turnOnServer() {
+            userName = document.getElementById("inputUserName").value;
+            ws = new WebSocket("ws://localhost:3000?type=" + userType + "&name=" + userName);
+            ws.onopen = function () {
+                console.log("已连接websocket服务！");
+                //首页关闭，显示聊天室
+                elementShouye.style.display = "none";
+                elementLiaotianshi.style.display = "block";
+                //清空元素内容
+                while (elementNeirong.hasChildNodes()) {
+                    elementNeirong.removeChild(elementNeirong.firstChild);
+                }
+            }
+            ws.onclose = function () {
+                console.log("已断开websocket服务！");
+                //显示首页，关闭聊天室
+                elementShouye.style.display = "block";
+                elementLiaotianshi.style.display = "none";
+            }
+            ws.onmessage = function (data) {
+                var message = JSON.parse(data.data);
+                //检查消息是代码还是消息，是代码则执行代码，是消息则显示消息
+                if(message.shuiFaDe == "code"){
+                    if(message.neiRong == "close"){
+                        //关闭服务代码
+                        turnOffServer()
+                    }
+                }else{
+                    showMessage(message.neiRong, message.shuiFaDe);
+                }
+                
+            }
+        }
+        //关闭服务
+        function turnOffServer() {
+            ws.close();
+        }
+        //发送消息
+        function send() {
+            var txt = document.getElementById("sendText").value;
+            ws.send(JSON.stringify({ "neiRong": txt }));
+        }
+        /**
+         * 显示消息
+         * neiRong 显示内容
+         * shuiFade 谁发的
+        */
+        function showMessage(neiRong, shuiFade) {
+            var elementDiv = document.createElement("div");
+            var elementSpan = document.createElement("span");
+            elementSpan.innerHTML = shuiFade;
+            var elementP = document.createElement("p");
+            elementP.innerHTML = neiRong;
+            if (shuiFade == userName) {
+                //显示自己发的消息
+                elementSpan.className = "text_align_right";
+                elementP.className = "text_align_right";
+                if (userType == "kefu") {
+                    elementDiv.className = "clearfix kefu_xiaoxi";
+                } else if (userType == "yonghu") {
+                    elementDiv.className = "clearfix yonghu_xiaoxi";
+                }
+            } else {
+                //显示别人发过来的消息
+                if (shuiFade == "系统") {
+                    //设置系统消息样式
+                    elementDiv.className = "clearfix xitong_xiaoxi";
+                } else {
+                    //不是系统消息样式，用户或客服
+                    if (userType == "kefu") {
+                        //如果当前身份是客服则设置用户消息样式
+                        elementDiv.className = "clearfix yonghu_xiaoxi";
+                    } else if (userType == "yonghu") {
+                        //如果当前身份是用户则设置客服消息样式
+                        elementDiv.className = "clearfix kefu_xiaoxi";
+                    }
+                }
+            }
+            elementDiv.appendChild(elementSpan);
+            elementDiv.appendChild(elementP);
+            elementNeirong.appendChild(elementDiv);
+        }
+
+
+    </script>
+</body>
+
+</html>

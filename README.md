@@ -98,7 +98,7 @@ readyState
 
 ```
 
-## 第二步 运行Demo测试nodejs-websocket
+## 第二步 运行小Demo测试nodejs-websocket
 
 #### 1、服务端安装nodejs-websocket
 
@@ -500,6 +500,12 @@ var server = ws.createServer(function (connection) {
 1、写完服务端，我们已经知道了这套客服聊天系统业务流程，客户和用户两种身份还是有点区别的，客服本身就是个房间，区别就是房间内有没有用户，所以客服上线时就要连接websocket创建房间等待用户连接。
 
 ```javascript
+//客服聊天系统首页界面
+var elementShouye = document.getElementById("shouye");
+//客服聊天系统聊天室界面
+var elementLiaotianshi = document.getElementById("liaotianshi");
+//聊天室元素
+var elementNeirong = document.getElementById("neirong");
 
 var ws = null;
 var userType = "kefu";//用户身份，yonghu或kefu
